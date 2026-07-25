@@ -152,6 +152,15 @@ Format as, i.e. with double backslashes for a single backslash:
   :group 'org-roam-ui
   :type 'alist)
 
+(defcustom org-roam-ui-extra-links-function nil
+  "Optional function that returns extra links to include in graph data.
+When non-nil, called with no arguments and must return a list of
+\(SOURCE TARGET TYPE\) triples, which are appended to the links sent
+to the browser.  Intended for packages like `roam-router-ui' that
+synthesize additional link types (e.g. hierarchy links)."
+  :group 'org-roam-ui
+  :type '(choice (const nil) function))
+
 ;; Internal vars
 
 (defvar org-roam-ui--ws-current-node nil
@@ -412,14 +421,17 @@ unchanged."
            properties
            tags])
          (old (not (fboundp 'org-roam-db-map-citations)))
-         (links-db-rows (if old
-                            (org-roam-ui--separate-ref-links
-                             (org-roam-ui--get-links old))
-                          (seq-concatenate
-                           'list
-                           (org-roam-ui--separate-ref-links
-                            (org-roam-ui--get-cites))
-                           (org-roam-ui--get-links))))
+         (base-links-db-rows (if old
+                                 (org-roam-ui--separate-ref-links
+                                  (org-roam-ui--get-links old))
+                               (seq-concatenate
+                                'list
+                                (org-roam-ui--separate-ref-links
+                                 (org-roam-ui--get-cites))
+                                (org-roam-ui--get-links))))
+         (extra-links-db-rows (when org-roam-ui-extra-links-function
+                                (funcall org-roam-ui-extra-links-function)))
+         (links-db-rows (append base-links-db-rows extra-links-db-rows))
          (links-with-empty-refs (org-roam-ui--filter-citations links-db-rows))
          (empty-refs (delete-dups (seq-map
                                    (lambda (link)

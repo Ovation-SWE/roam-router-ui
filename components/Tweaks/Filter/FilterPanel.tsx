@@ -148,6 +148,17 @@ const FilterPanel = (props: FilterPanelProps) => {
           ></Switch>
         </Flex>
         <Flex justifyContent="space-between">
+          <Text>Roam-Router Hierarchy</Text>
+          <Switch
+            onChange={() => {
+              setFilter((curr: typeof initialFilter) => {
+                return { ...curr, roamRouterHierarchy: !curr.roamRouterHierarchy }
+              })
+            }}
+            isChecked={filter.roamRouterHierarchy}
+          ></Switch>
+        </Flex>
+        <Flex justifyContent="space-between">
           <Text>Citations without note files</Text>
           <Switch
             onChange={() => {

@@ -917,6 +917,9 @@ export const Graph = function (props: GraphProps) {
         return false
       }
       const linkRoam = link as OrgRoamLink
+      if (!filter.roamRouterHierarchy && linkRoam.type === 'roam-router-hierarchy') {
+        return false
+      }
       if (!filter.parent) {
         return !['parent', 'heading'].includes(linkRoam.type)
       }
@@ -1256,6 +1259,17 @@ export const Graph = function (props: GraphProps) {
             )
       }
 
+      if (visuals.roamRouterHierarchyLinkColor && roamLink.type === 'roam-router-hierarchy') {
+        return needsHighlighting &&
+          (visuals.roamRouterHierarchyLinkHighlightColor || visuals.linkHighlight)
+          ? highlightColors[visuals.roamRouterHierarchyLinkColor][
+              visuals.roamRouterHierarchyLinkHighlightColor || visuals.linkHighlight
+            ](opacity)
+          : highlightColors[visuals.roamRouterHierarchyLinkColor][visuals.backgroundColor](
+              visuals.highlightFade * opacity,
+            )
+      }
+
       return getLinkColor({
         sourceId: sourceId as string,
         targetId: targetId as string,
@@ -1384,6 +1398,9 @@ export const Graph = function (props: GraphProps) {
             }
             if (visuals.refDashes && linkArg.type == 'ref') {
               return [visuals.refDashLength, visuals.refGapLength]
+            }
+            if (visuals.roamRouterHierarchyDashes && linkArg.type === 'roam-router-hierarchy') {
+              return [visuals.roamRouterHierarchyDashLength, visuals.roamRouterHierarchyGapLength]
             }
             return null
           }}

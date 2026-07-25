@@ -46,6 +46,7 @@ export const initialFilter = {
   links: [],
   date: [],
   noter: true,
+  roamRouterHierarchy: true,
 }
 export const initialColoring = {
   method: 'degree',
@@ -111,6 +112,11 @@ export const initialVisuals = {
   refLinkColor: 'gray.700',
   refLinkHighlightColor: '',
   refNodeColor: 'black',
+  roamRouterHierarchyDashes: true,
+  roamRouterHierarchyDashLength: 20,
+  roamRouterHierarchyGapLength: 10,
+  roamRouterHierarchyLinkColor: 'purple.500',
+  roamRouterHierarchyLinkHighlightColor: '',
   nodeSizeLinks: 0.5,
   nodeZoomSize: 1.2,
 }
